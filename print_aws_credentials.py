@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from botocore.session import Session
 import sys
+import os
 
 try:
     profile = sys.argv[1]
@@ -19,7 +20,10 @@ if credentials.token is None:
     print("echo 'Profile \"{}\" seeems not to be a Role. exit' >&2;false".format(profile))
     exit(1)
 print("export AWS_ACCESS_KEY_ID={}".format(credentials.access_key))
-print("export AWS_SECRET_ACCESS={}".format(credentials.secret_key))
+print("export AWS_SECRET_ACCESS_KEY={}".format(credentials.secret_key))
 print("export AWS_SESSION_TOKEN={}".format(credentials.token))
-print('export OLD_PS1="$PS1"')
-print('export PS1="({})$PS1"'.format(profile))
+if os.environ.has_key('OLD_PS1'):
+    print('export PS1="({})$OLD_PS1"'.format(profile))
+else:
+    print('export OLD_PS1="$PS1"')
+    print('export PS1="({})$PS1"'.format(profile))
