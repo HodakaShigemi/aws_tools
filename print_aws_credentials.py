@@ -16,13 +16,11 @@ if not profile in available_profiles:
     exit(1)
 
 credentials = Session(profile=profile).get_credentials()
-if credentials.token is None:
-    print("echo 'Profile \"{}\" seeems not to be a Role. exit' >&2;false".format(profile))
-    exit(1)
 print("export AWS_ACCESS_KEY_ID={}".format(credentials.access_key))
 print("export AWS_SECRET_ACCESS_KEY={}".format(credentials.secret_key))
-print("export AWS_SESSION_TOKEN={}".format(credentials.token))
-if os.environ.has_key('OLD_PS1'):
+if credentials.token:
+    print("export AWS_SESSION_TOKEN={}".format(credentials.token))
+if os.environ.get('OLD_PS1'):
     print('export PS1="({})$OLD_PS1"'.format(profile))
 else:
     print('export OLD_PS1="$PS1"')
